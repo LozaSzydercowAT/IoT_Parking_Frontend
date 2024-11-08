@@ -16,6 +16,7 @@ npm run dev
 * [Fluent UI Icons](https://www.npmjs.com/package/@fluentui/react-icons) `2.0.262`
 * [React JWT](https://www.npmjs.com/package/react-jwt) `1.2.2`
 * [React Router](https://reactrouter.com/en/main) `6.27.0`
+* [Sass](https://sass-css.org/) `1.80.4`
 * [Vite](https://vite.dev/) `5.4.8`
 
 ## Credits
