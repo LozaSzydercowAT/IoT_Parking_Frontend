@@ -1,9 +1,6 @@
-import {Outlet} from "react-router-dom";
-
-
 function Account() {
     return <>
-        <Outlet/>
+        <h1>Konto</h1>
     </>
 }
 
