@@ -20,18 +20,20 @@ function App() {
       <Suspense fallback={<Loader />}>
           <BrowserRouter>
               <Navbar />
-              <Routes>
-                  <Route path="/" element={<Homepage />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/account" element={!isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
-                      <Route index element={<Account />} />
-                      <Route path="cars" element={<Cars />} />
-                      <Route path="payments" element={<Payments />} />
-                      <Route path="history" element={<History />} />
-                      <Route path="messages" element={<Messages />} />
-                  </Route>
-              </Routes>
+              <main>
+                  <Routes>
+                      <Route index element={<Homepage />} />
+                      <Route path="login" element={<Login />} />
+                      <Route path="register" element={<Register />} />
+                      <Route path="account" element={isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
+                          <Route index element={<Account />} />
+                          <Route path="cars" element={<Cars />} />
+                          <Route path="payments" element={<Payments />} />
+                          <Route path="history" element={<History />} />
+                          <Route path="messages" element={<Messages />} />
+                      </Route>
+                  </Routes>
+              </main>
           </BrowserRouter>
       </Suspense>
   )

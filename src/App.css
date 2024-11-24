@@ -5,6 +5,11 @@
   text-align: center;
 }
 
-h1 {
-  margin: 10px;
+nav {
+  background-color: #222222;
+}
+
+main {
+  min-height: calc(100vh - 80px);
+  padding: 10px;
 }
