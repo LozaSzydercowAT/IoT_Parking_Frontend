@@ -5,7 +5,7 @@
     min-height: calc(100vh - 85px);
 }
 
-.login-input {
+.labelStyle {
     margin: 10px 0;
 }
 
@@ -13,6 +13,10 @@
     color: #ffffff;
 }
 
-.login h1 {
-    margin-bottom: 20px;
+.registerText {
+    margin-top: 10px;
+}
+
+.registerLink {
+    color: cornflowerblue;
 }

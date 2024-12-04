@@ -13,10 +13,11 @@ const Cars = lazy(() => import('./components/Cars'));
 const Payments = lazy(() => import('./components/Payments'));
 const History = lazy(() => import('./components/History'));
 const Messages = lazy(() => import('./components/Messages'));
+const About = lazy(() => import('./components/About'));
 
 function App() {
   return (
-      <Suspense fallback={<Loader spinnerLabel="Ładowanie aplikacji" />}>
+      <Suspense fallback={<Loader />}>
           <BrowserRouter>
               <Navbar />
               <main>
@@ -30,6 +31,7 @@ function App() {
                           <Route path="history" element={<History />} />
                           <Route path="messages" element={<Messages />} />
                       </Route>
+                      <Route path="about" element={<About />} />
                   </Routes>
               </main>
           </BrowserRouter>
