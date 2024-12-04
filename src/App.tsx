@@ -6,7 +6,6 @@ import {lazy, Suspense} from "react";
 import Loader from "./components/shared/Loader";
 
 const Homepage = lazy(() => import('./components/Homepage'));
-const Login = lazy(() => import('./components/Login'));
 const Register = lazy(() => import('./components/Register'));
 const AccountPage = lazy(() => import('./components/AccountPage'));
 const Account = lazy(() => import('./components/Account'));
@@ -17,13 +16,12 @@ const Messages = lazy(() => import('./components/Messages'));
 
 function App() {
   return (
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<Loader spinnerLabel="Ładowanie aplikacji" />}>
           <BrowserRouter>
               <Navbar />
               <main>
                   <Routes>
                       <Route index element={<Homepage />} />
-                      <Route path="login" element={<Login />} />
                       <Route path="register" element={<Register />} />
                       <Route path="account" element={isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
                           <Route index element={<Account />} />

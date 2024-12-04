@@ -5,13 +5,8 @@
     min-height: calc(100vh - 85px);
 }
 
-.login {
-    padding: 20px;
-    width: 300px;
-}
-
 .login-input {
-    width: 300px;
+    margin: 10px 0;
 }
 
 .label {
