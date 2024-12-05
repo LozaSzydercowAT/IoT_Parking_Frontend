@@ -1,5 +1,5 @@
 import {Button, Dialog, DialogTrigger, Menu, MenuDivider, MenuList, MenuItem, MenuPopover, MenuTrigger, Persona, Tooltip, DialogSurface, DialogBody, DialogTitle, DialogContent, Label, Input, Text, DialogActions, Spinner, MessageBar, MessageBarBody, MessageBarTitle} from "@fluentui/react-components";
-import {ArrowExitFilled, HistoryFilled, NotebookEyeFilled, PersonFilled, PersonRegular, VehicleCarFilled, WalletCreditCardFilled} from "@fluentui/react-icons"
+import {ArrowExitFilled, HistoryFilled, LockClosedRegular, NotebookEyeFilled, PersonFilled, PersonRegular, PersonAddRegular, VehicleCarFilled, WalletCreditCardFilled} from "@fluentui/react-icons"
 import {FormEvent, useState} from "react";
 import {isExpired} from "react-jwt";
 import {Link} from "react-router-dom";
@@ -14,6 +14,7 @@ function Navbar() {
     const [isOpenLogin, setOpenLogin] = useState(false);
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         window.location.replace("/");
@@ -30,11 +31,11 @@ function Navbar() {
         })
 
         axios.post('/user/login', bodyParams)
-        .then(res => {
-            localStorage.setItem('token', res.data.token);
+        .then(response => {
+            localStorage.setItem('token', response.data.token);
             window.location.replace('/');
         }).catch(error => {
-            if(error.status === 401) setLoginError(true);
+            if(error.response && error.response.status === 401) setLoginError(true);
             else setUnexError(true);
             setActionStatus(false);
         })
@@ -55,21 +56,21 @@ function Navbar() {
                 <h1 className={"logo"}>Inteligentny parking</h1>
             </Link>
         </div>
-        {isExpired(localStorage.getItem('token') || '') ? <Dialog modalType={"alert"} open={isOpenLogin} onOpenChange={(event,data) => setOpenLogin(data.open)}>
+        {isExpired(localStorage.getItem('token') || '') ? <Dialog modalType="alert" open={isOpenLogin} onOpenChange={(_event,data) => setOpenLogin(data.open)}>
                 <DialogTrigger disableButtonEnhancement>
                     <Button icon={<PersonRegular />} style={{padding: '0 20px', margin: "5px 0 5px 0"}}>Zaloguj się</Button>
                 </DialogTrigger>
             {isAction ? <DialogSurface>
                     <DialogBody>
-                        <DialogContent>
+                        <DialogTitle action={null}>
                             <Spinner appearance="primary" label="Logowanie" />
-                        </DialogContent>
+                        </DialogTitle>
                     </DialogBody>
                 </DialogSurface> : <DialogSurface>
                 <form onSubmit={handleLogin}>
                     <DialogBody>
                         <DialogTitle>Logowanie</DialogTitle>
-                        <DialogContent style={{display: "flex", flexDirection: "column"}}>
+                        <DialogContent className="dialogContent">
                             {loginError && <MessageBar intent={"error"}>
                                 <MessageBarBody>
                                     <MessageBarTitle>Podano niepoprawne dane logowania.</MessageBarTitle>
@@ -84,14 +85,23 @@ function Navbar() {
                             <Input required type="text" id={"login-input"} onChange={(e) => setLogin(e.target.value)} />
                             <Label required htmlFor={"password-input"} className={"labelStyle"}>Hasło</Label>
                             <Input required type="password" id={"password-input"} onChange={(e) => setPassword(e.target.value)} />
-                            <Text className={"registerText"}>Nie masz konta? <Link to={"/register"} className={"registerLink"} onClick={() => setOpenLogin(false)}>Utwórz je tutaj.</Link></Text>
+                            <Text className={"passResetText"}>Zapomniałeś hasła? <Link to={"/register"} className={"passResetLink"} onClick={() => setOpenLogin(false)}>Zresetuj je tutaj.</Link></Text>
                         </DialogContent>
                     </DialogBody>
-                    <DialogActions style={{marginTop: "20px"}}>
-                        <DialogTrigger disableButtonEnhancement>
-                            <Button appearance="secondary">Zamknij</Button>
-                        </DialogTrigger>
-                        <Button appearance="primary" type={"submit"}>Zaloguj</Button>
+                    <DialogActions style={{marginTop: "20px", justifyContent: "space-between", width: '100%'}} fluid={true}>
+                        <div>
+                            <DialogTrigger disableButtonEnhancement>
+                                <Link to={'/register'}>
+                                    <Button appearance="secondary" icon={<PersonAddRegular />}>Utwórz konto</Button>
+                                </Link>
+                            </DialogTrigger>
+                        </div>
+                        <div>
+                            <DialogTrigger disableButtonEnhancement>
+                                <Button appearance="secondary" style={{marginRight: '10px'}}>Zamknij</Button>
+                            </DialogTrigger>
+                            <Button appearance="primary" type={"submit"} icon={<LockClosedRegular />}>Zaloguj</Button>
+                        </div>
                     </DialogActions>
                 </form>
                 </DialogSurface>}
