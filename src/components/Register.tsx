@@ -1,5 +1,5 @@
 import {useState, FormEvent, ChangeEvent} from "react";
-import {Button, Checkbox, Field, Input, MessageBar, MessageBarBody, MessageBarTitle, Spinner} from "@fluentui/react-components";
+import {Button, Switch, Field, Input, MessageBar, MessageBarBody, MessageBarTitle, Spinner} from "@fluentui/react-components";
 import "../assets/styles/login.css";
 import axios from "../../axiosConfig.ts";
 
@@ -41,26 +41,25 @@ function Register() {
     const handleRegister = (event: FormEvent<HTMLFormElement>)=> {
         event.preventDefault()
         setAction(true)
-        console.log(isAction)
         //validateForm()
 
-        if(errors || formError) {
-            setAction(false);
-            return;
-        } else {
-            axios.post('/user/register', {
-                username: account.username,
-                email: account.email,
-                password: account.password
-            }).then((response) => {
-                localStorage.setItem('token', response.data.token)
-                window.location.replace('/')
-            }).catch((error) => {
-                if(error.response && error.response.status === 401) setRegisterError(true)
-                else setNetworkError(true);
-            })
-        }
-        setAction(false)
+        //if(errors || formError) {
+        //    setAction(false);
+        //    return;
+        //} else {
+        //    axios.post('/user/register', {
+        //        username: account.username,
+        //        email: account.email,
+        //        password: account.password
+        //    }).then((response) => {
+        //        localStorage.setItem('token', response.data.token)
+        //        window.location.replace('/')
+        //   }).catch((error) => {
+        //        if(error.response && error.response.status === 401) setRegisterError(true)
+        //        else setNetworkError(true);
+        //    })
+        //}
+        //setAction(false)
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,14 +70,15 @@ function Register() {
         }));
     };
 
-    const handleAcceptation = (_event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    const handleAcceptation = (_event: ChangeEvent<HTMLInputElement>, data) => {
         setAccount((prevAccount) => ({
             ...prevAccount,
-            isAccepted: checked.checked
+            isAccepted: data.checked
         }));
+        console.log(data.checked);
     }
 
-    return <>
+    return <div className={'maxWidth'}>
         <h1>Tworzenie nowego użytkownika</h1>
         {registerError && <></>}
         {networkError && <MessageBar intent={"error"}>
@@ -87,31 +87,37 @@ function Register() {
                 Wystąpił błąd w trakcie komunikacji z serwerem.
             </MessageBarBody>
         </MessageBar>}
-        {formError && <MessageBar intent={"error"}>
-            <MessageBarTitle>W formularzu znajdują się błędy! </MessageBarTitle>
-            <ul>
-                <li>Tu jest źle</li>
-                <li>Tu jest źle</li>
-                <li>Tu jest źle</li>
-            </ul>
-        </MessageBar> }
+        <MessageBar intent={"error"}>
+            <MessageBarBody style={{padding: '10px'}}>
+                <MessageBarTitle>W formularzu znajdują się błędy! </MessageBarTitle>
+                <ul style={{paddingLeft: '20px', margin: '5px 0'}}>
+                    <li>Niepoprawna nazwa użytkownika!</li>
+                    <li>Niepoprawny adres e-mailowy!</li>
+                    <li>Hasła są różne!</li>
+                    <li>Hasło nie spełnia norm bezpieczeństwa!</li>
+                </ul>
+            </MessageBarBody>
+        </MessageBar>
         <form onSubmit={handleRegister}>
             <Field required label="Nazwa użytkownika" className="labelStyle">
-                <Input required type="text" name="username" value={account.username} onChange={handleChange} />
+                <Input required disabled={isAction} type="text" name="username" value={account.username} onChange={handleChange} />
             </Field>
             <Field required label="Adres e-mail" className="labelStyle">
-                <Input required type="email" name="email" value={account.email} onChange={handleChange} />
+                <Input required disabled={isAction} type="email" name="email" value={account.email} onChange={handleChange} />
             </Field>
             <Field required label="Hasło" className="labelStyle">
-                <Input required type="password" name="password" value={account.password} onChange={handleChange} />
+                <Input required disabled={isAction} type="password" name="password" value={account.password} onChange={handleChange} />
             </Field>
             <Field required label="Powtórz hasło" className="labelStyle">
-                <Input required type="password" name="password2" value={account.password2} onChange={handleChange} />
+                <Input required disabled={isAction} type="password" name="password2" value={account.password2} onChange={handleChange} />
             </Field>
-            <Checkbox required label="Akceptuję regulamin usługi" name="isAccepted" checked={account.isAccepted} onChange={handleAcceptation} className="labelStyle" />
-            <Button type="submit" disabled={isAction} appearance="primary">{isAction ? <Spinner label="Tworzenie nowego użytkownika" /> : 'Zarejestruj'}</Button>
+            <div><Switch required label="Akceptuję regulamin usługi" name="isAccepted" checked={account.isAccepted} onChange={handleAcceptation} className="labelStyle" /></div>
+            <div className={"bottomContainer"}>
+                <Button type="submit" disabled={isAction} appearance="primary">Zarejestruj</Button>
+                {isAction && <Spinner size={'tiny'} label={'Tworzenie nowego użytkownika'} /> }
+            </div>
         </form>
-    </>
+    </div>
 }
 
 export default Register
