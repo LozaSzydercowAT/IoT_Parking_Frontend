@@ -1,19 +1,20 @@
 import './App.css'
 import {isExpired} from "react-jwt";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import Navbar from "./components/shared/Navbar.tsx";
+import Navbar from "./components/Navbar.tsx";
 import {lazy, Suspense} from "react";
 import Loader from "./components/shared/Loader";
 
-const Homepage = lazy(() => import('./components/Homepage'));
-const Register = lazy(() => import('./components/Register'));
-const AccountPage = lazy(() => import('./components/AccountPage'));
-const Account = lazy(() => import('./components/Account'));
-const Cars = lazy(() => import('./components/Cars'));
-const Payments = lazy(() => import('./components/Payments'));
-const History = lazy(() => import('./components/History'));
-const Messages = lazy(() => import('./components/Messages'));
-const About = lazy(() => import('./components/About'));
+const Homepage = lazy(() => import('./components/sites/Homepage.tsx'));
+const Register = lazy(() => import('./components/sites/Register.tsx'));
+const AccountPage = lazy(() => import('./components/sites/AccountPage.tsx'));
+const Account = lazy(() => import('./components/sites/Account.tsx'));
+const Cars = lazy(() => import('./components/sites/Cars.tsx'));
+const Payments = lazy(() => import('./components/sites/Payments.tsx'));
+const History = lazy(() => import('./components/sites/History.tsx'));
+const Messages = lazy(() => import('./components/sites/Messages.tsx'));
+const About = lazy(() => import('./components/sites/About.tsx'));
+const Login = lazy(() => import('./components/Login.tsx'))
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <main>
                   <Routes>
                       <Route index element={<Homepage />} />
+                      <Route path="login" element={<Login />} />
                       <Route path="register" element={<Register />} />
                       <Route path="account" element={isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
                           <Route index element={<Account />} />

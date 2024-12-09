@@ -1,7 +1,7 @@
 import {useState, FormEvent, ChangeEvent} from "react";
 import {Button, Switch, Field, Input, MessageBar, MessageBarBody, MessageBarTitle, Spinner} from "@fluentui/react-components";
-import "../assets/styles/login.css";
-import axios from "../../axiosConfig.ts";
+import "../../assets/styles/login.css";
+import axios from "../../../axiosConfig.ts";
 
 interface Errors {
     username?: string;
