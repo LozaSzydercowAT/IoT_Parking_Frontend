@@ -14,7 +14,7 @@ const Payments = lazy(() => import('./components/sites/Payments.tsx'));
 const History = lazy(() => import('./components/sites/History.tsx'));
 const Messages = lazy(() => import('./components/sites/Messages.tsx'));
 const About = lazy(() => import('./components/sites/About.tsx'));
-const Login = lazy(() => import('./components/Login.tsx'))
+const Login = lazy(() => import('./components/sites/Login.tsx'))
 
 function App() {
   return (

@@ -1,0 +1,25 @@
+:root {
+    --defaultDimm: 20px;
+}
+.tableAlignment {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    padding: 0 40px;
+}
+
+.sectorName {
+    border-radius: var(--defaultDimm);
+    text-align: center;
+    margin: 10px 0;
+}
+
+.buttonStyle {
+    padding: 15px;
+}
+
+.sectorAlignment {
+    display: flex;
+    flex-direction: column;
+    gap: var(--defaultDimm);
+}

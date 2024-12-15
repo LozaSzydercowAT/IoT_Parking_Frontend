@@ -27,11 +27,12 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         setReqLoginInfo(false);
 
         axios.post('/user/login', {
-            "user": login,
+            "name": login,
             "password": password
         })
             .then(response => {
-                localStorage.setItem('token', response.data.message);
+                console.log(response.data.message);
+                localStorage.setItem('token', response.data.id);
                 window.location.replace('/');
             }).catch(error => {
             if (error.response && error.response.status === 401) setLoginError(true);

@@ -1,9 +1,9 @@
-import { Button, Menu, MenuDivider, MenuList, MenuItem, MenuPopover, MenuTrigger, Persona, Tooltip } from "@fluentui/react-components";
+import { Button, Menu, MenuDivider, MenuList, MenuItem, MenuPopover, MenuTrigger, Persona, Tooltip, Skeleton, SkeletonItem } from "@fluentui/react-components";
 import { ArrowExitFilled, HistoryFilled, PersonFilled, PersonRegular, VehicleCarFilled, WalletCreditCardFilled, NotebookEyeFilled } from "@fluentui/react-icons";
 import { Link } from "react-router-dom";
 import { Hamburger } from "@fluentui/react-nav-preview";
 import "../assets/styles/login.css";
-import {PersonData} from "../interfaces/PersonData.tsx";
+import PersonData from "../interfaces/PersonData"
 import {SetStateAction, useEffect, useState} from "react";
 import axios from "../../axiosConfig.ts"
 
@@ -16,17 +16,17 @@ function Navbar() {
     };
 
     useEffect(() => {
-        setIsLoggedIn(localStorage.getItem('token') === 'login successful');
+        setIsLoggedIn(localStorage.getItem('token') !== null);
         if (isLoggedIn) {
-            axios.get("/api/users", {
+            axios.get("/user/" + localStorage.getItem('token'), {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': ' application/json',
-                    'x-auth-token': localStorage.getItem('token')
                 }
             })
                 .then((response: { data: SetStateAction<PersonData | null>; }) => {
                     setPerson(response.data);
+                    setIsLoggedIn(true);
                 }).catch(error => {
                     console.log(error);
             })
@@ -49,7 +49,7 @@ function Navbar() {
                     <h1 className={"logo"}>Inteligentny parking</h1>
                 </Link>
             </div>
-            {localStorage.getItem('token') !== 'login successful' ? (
+            {localStorage.getItem('token') === null ? (
                 <Link to={"/login"} style={{ margin: 'auto 0' }}>
                     <Button icon={<PersonRegular />} style={{ padding: '10px 20px' }}>
                         Zaloguj się
@@ -58,14 +58,15 @@ function Navbar() {
             ) : (
                 <Menu>
                     <MenuTrigger>
-                        <MenuItem>
+                        {person?.name === undefined ? <Skeleton style={{width: '186px'}}>
+                            <SkeletonItem style={{height: '50px'}}/>
+                        </Skeleton> : <MenuItem>
                             <Persona
                                 name={person?.name + ' ' + person?.surname}
-                                secondaryText={'Dostępne środki: ' + person?.balance}
+                                secondaryText={'Dostępne środki: ' + person?.balance + " zł"}
                                 presence={{ status: "available" }}
-                                style={{ padding: '5px 10px', transform: 'translateY(-3px)' }}
-                            />
-                        </MenuItem>
+                                style={{ padding: '5px 10px', transform: 'translateY(-3px)' }}/>
+                        </MenuItem>}
                     </MenuTrigger>
                     <MenuPopover>
                         <MenuList>
