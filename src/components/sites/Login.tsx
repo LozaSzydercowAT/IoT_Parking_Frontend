@@ -1,5 +1,5 @@
 import {useState} from "react";
-import LoginModal from "../shared/LoginModal.tsx";
+import LoginModal from "../shared/LoginModal";
 import {Navigate} from "react-router-dom";
 
 function Login() {

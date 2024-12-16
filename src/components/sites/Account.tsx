@@ -1,7 +1,12 @@
-function Account() {
+import {memo} from 'react'
+import {LargeTitle} from "@fluentui/react-components";
+
+const Account = memo(function() {
     return <>
-        <h1>Konto</h1>
+        <div className={'tablePosition'}>
+            <LargeTitle>Konto</LargeTitle>
+        </div>
     </>
-}
+})
 
 export default Account

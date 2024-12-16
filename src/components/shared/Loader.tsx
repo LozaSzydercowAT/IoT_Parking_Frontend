@@ -1,9 +1,14 @@
 import {Spinner} from "@fluentui/react-components";
 import "../../assets/loader.css"
 
-function Loader() {
-    return <div className="loader">
-        <Spinner appearance="primary" label="Ładowanie aplikacji" />
+export interface LoaderProps {
+    label?: string;
+    isForPage?: boolean;
+}
+
+function Loader({label, isForPage}: LoaderProps) {
+    return <div className={isForPage ? "pageLoader" : 'componentLoader'}>
+        <Spinner appearance="primary" label={label || 'Ładowanie aplikacji'} />
     </div>
 }
 

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "../../../axiosConfig.ts";
-import SectorData from "../../interfaces/SectorData.tsx";
-import SpaceSkeleton from "../shared/SpaceSkeleton.tsx";
+import SectorData from "../../interfaces/SectorData";
+import SpaceSkeleton from "../shared/SpaceSkeleton";
 import { Persona, Button, Popover, PopoverTrigger, PopoverSurface, MessageBar, MessageBarBody, MessageBarActions } from "@fluentui/react-components";
 import '../../assets/styles/homepage.css'
 import {CalendarAddFilled} from "@fluentui/react-icons";

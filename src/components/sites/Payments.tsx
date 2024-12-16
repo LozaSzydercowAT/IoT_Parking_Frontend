@@ -1,7 +1,12 @@
-function Payments() {
+import {memo} from 'react'
+import {LargeTitle} from "@fluentui/react-components";
+
+const Payments = memo(function() {
     return <>
-        <h1>Płatności</h1>
+        <div className={'tablePosition'}>
+            <LargeTitle className={"marginsDef"}>Płatności</LargeTitle>
+        </div>
     </>
-}
+})
 
 export default Payments

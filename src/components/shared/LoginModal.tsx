@@ -56,7 +56,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                             <DialogTitle>Logowanie</DialogTitle>
                             <DialogContent className="dialogContent">
                                 {reqLoginInfo && (
-                                    <MessageBar intent={"warning"}>
+                                    <MessageBar intent="warning" layout="multiline">
                                         <MessageBarBody>
                                             Aby móc zobaczyć żądaną zawartość, należy się zalogować.
                                         </MessageBarBody>
@@ -65,7 +65,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                                 {loginError && (
                                     <MessageBar intent={"error"}>
                                         <MessageBarBody>
-                                            <MessageBarTitle>Podano niepoprawne dane logowania.</MessageBarTitle>
+                                            <MessageBarTitle>Podano niepoprawne dane logowania</MessageBarTitle>
                                         </MessageBarBody>
                                     </MessageBar>
                                 )}

@@ -1,0 +1,10 @@
+.accountContainer {
+    margin: 0 auto;
+}
+
+.messagesContainer {
+    max-width: 800px;
+    border: 1px solid gray;
+    padding: 20px;
+    margin: 20px auto;
+}

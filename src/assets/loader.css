@@ -1,7 +1,11 @@
-.loader {
+.pageLoader {
     width: 100%;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.componentLoader {
+    padding: 20px 0;
 }

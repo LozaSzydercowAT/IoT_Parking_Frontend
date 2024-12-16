@@ -1,11 +1,7 @@
-:root {
-    --defaultDimm: 20px;
-}
 .tableAlignment {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 40px;
-    padding: 0 40px;
 }
 
 .sectorName {

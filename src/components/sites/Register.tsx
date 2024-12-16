@@ -81,14 +81,14 @@ function Register() {
     return <div className={'maxWidth'}>
         <h1>Tworzenie nowego użytkownika</h1>
         {registerError && <></>}
-        {networkError && <MessageBar intent={"error"}>
+        {networkError && <MessageBar intent="error" layout="multiline">
             <MessageBarBody>
                 <MessageBarTitle>Nieoczekiwany błąd.</MessageBarTitle>
                 Wystąpił błąd w trakcie komunikacji z serwerem.
             </MessageBarBody>
         </MessageBar>}
-        <MessageBar intent={"error"}>
-            <MessageBarBody style={{padding: '10px'}}>
+        <MessageBar intent="error" layout="multiline">
+            <MessageBarBody>
                 <MessageBarTitle>W formularzu znajdują się błędy! </MessageBarTitle>
                 <ul style={{paddingLeft: '20px', margin: '5px 0'}}>
                     <li>Niepoprawna nazwa użytkownika!</li>
