@@ -2,10 +2,8 @@ import {useEffect, useState} from "react";
 import axios from "../../../axiosConfig.ts";
 import SectorData from "../../interfaces/SectorData";
 import SpaceSkeleton from "../shared/SpaceSkeleton";
-import { Persona, Button, Popover, PopoverTrigger, PopoverSurface, MessageBar, MessageBarBody, MessageBarActions } from "@fluentui/react-components";
 import '../../assets/styles/homepage.css'
-import {CalendarAddFilled} from "@fluentui/react-icons";
-import {Link} from "react-router-dom";
+import ParkingPlaceTile from "../shared/ParkingPlaceTile.tsx";
 
 function Homepage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -39,36 +37,7 @@ function Homepage() {
                                 <h1>Sektor {sector.sector} ({sector.sectorColor})</h1>
                             </div>
                             {sector.parkingSpaces.map((parking, key) => (
-                                <Popover key={key}>
-                                    <PopoverTrigger>
-                                        <Button size={"large"} disabled={parking.use} className={'buttonStyle'}>
-                                            <Persona presenceOnly size="huge" key={key}
-                                                     name={"Miejsce nr " + parking.place}
-                                                     presence={parking.use ? {status: "do-not-disturb"} : parking.reserved ? {status: "busy"} : {status: "available"}}
-                                                     secondaryText={(parking.charger !== 0) ? "Dla pojazdów elektrycznych" : "Dla wszystkich samochodów"}>
-                                            </Persona></Button>
-                                    </PopoverTrigger>
-                                    <PopoverSurface>
-                                        <h3>Piętro {sector.floor}, Sektor {sector.sector} ({sector.sectorColor}), Miejsce {parking.place}</h3>
-                                        <ul>
-                                            <li>{(parking.charger !== 0) ? "Miejsce dla pojazdów elektrycznych (ładowarka " + parking.charger + " W)" : "Dla wszystkich pojazdów"}</li>
-                                            <li>Opłata za postój: {parking.priceHour} zł/h</li>
-                                        </ul>
-                                        {(!parking.use && !parking.reserved) && (
-                                            localStorage.getItem('token') ? <Button icon={<CalendarAddFilled />} appearance="primary">Zarezerwuj</Button> :
-                                                <MessageBar intent="warning">
-                                                    <MessageBarBody>
-                                                        Aby zarezerwować to miejsce, należy się zalogować
-                                                    </MessageBarBody>
-                                                    <MessageBarActions>
-                                                        <Link to={'/login'}>
-                                                            <Button>Zaloguj się</Button>
-                                                        </Link>
-                                                    </MessageBarActions>
-                                                </MessageBar>
-                                            )}
-                                    </PopoverSurface>
-                                </Popover>
+                                <ParkingPlaceTile parkingPlace={parking} sectorData={sector} key={key} />
                             ))}
                         </div>
                     ))}

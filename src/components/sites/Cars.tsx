@@ -1,9 +1,31 @@
 import {memo, useState, useEffect} from 'react'
-import { Button, createTableColumn, DataGrid, DataGridBody, DataGridCell, DataGridHeader, DataGridHeaderCell, DataGridProps, DataGridRow, LargeTitle, TableCellLayout, TableColumnDefinition } from "@fluentui/react-components";
+import {
+    Button,
+    createTableColumn,
+    DataGrid,
+    DataGridBody,
+    DataGridCell,
+    DataGridHeader,
+    DataGridHeaderCell,
+    DataGridProps,
+    DataGridRow,
+    LargeTitle,
+    Spinner,
+    TableCellLayout,
+    TableColumnDefinition
+} from "@fluentui/react-components";
 import '../../../axiosConfig.ts'
 import CarItem from "../../interfaces/CarItem";
 import axios from '../../../axiosConfig.ts'
-import { ArrowSyncFilled, CalendarClockFilled, DeleteRegular, EditRegular, VehicleCarProfileRegular, VehicleCarRegular } from "@fluentui/react-icons";
+import {
+    AddCircleFilled,
+    ArrowSyncFilled,
+    CalendarClockFilled,
+    DeleteRegular,
+    EditRegular,
+    VehicleCarProfileRegular,
+    VehicleCarRegular
+} from "@fluentui/react-icons";
 
 const columns: TableColumnDefinition<CarItem>[] = [
     createTableColumn<CarItem>({
@@ -112,8 +134,12 @@ const Cars = memo(function() {
     return <>
         <div className={'tablePosition'}>
             <LargeTitle>Samochody</LargeTitle>
-            <Button appearance="primary" icon={<ArrowSyncFilled />} onClick={fetchData}>Odśwież</Button>
+            <div className={'buttonGroup'}>
+                <Button appearance="secondary" icon={<AddCircleFilled />}>Dodaj</Button>
+                <Button appearance="primary" icon={loading ? <Spinner size={"tiny"} /> : <ArrowSyncFilled />} disabledFocusable={loading} onClick={fetchData}>Odśwież</Button>
+            </div>
         </div>
+        {!loading &&
         <DataGrid items={data} columns={columns} sortable sortState={sortState} onSortChange={onSortChange}>
             <DataGridHeader>
                 <DataGridRow>
@@ -131,7 +157,7 @@ const Cars = memo(function() {
                     </DataGridRow>
                 )}
             </DataGridBody>
-        </DataGrid>
+        </DataGrid>}
     </>
 })
 

@@ -1,16 +1,7 @@
 import {memo, useEffect, useState} from 'react'
-import {
-    Button,
-    createTableColumn,
-    DataGrid, DataGridBody, DataGridCell, DataGridHeader, DataGridHeaderCell,
-    DataGridProps, DataGridRow,
-    LargeTitle,
-    TableCellLayout,
-    TableColumnDefinition
-} from "@fluentui/react-components";
+import { Button, createTableColumn, DataGrid, DataGridBody, DataGridCell, DataGridHeader, DataGridHeaderCell, DataGridProps, DataGridRow, LargeTitle, TableCellLayout, TableColumnDefinition } from "@fluentui/react-components";
 import HistoryItem from "../../interfaces/HistoryItem.tsx";
 import {ArrowSyncFilled, CalendarClockFilled, MoneyFilled, VehicleCarProfileRegular} from "@fluentui/react-icons";
-import CarItem from "../../interfaces/CarItem.tsx";
 
 const columns: TableColumnDefinition<HistoryItem>[] = [
     createTableColumn<HistoryItem>({
@@ -104,9 +95,9 @@ const History = memo(function() {
                     )}
                 </DataGridRow>
             </DataGridHeader>
-            <DataGridBody<CarItem>>
+            <DataGridBody<HistoryItem>>
                 {({item, rowId}) => (
-                    <DataGridRow<CarItem> key={rowId}>
+                    <DataGridRow<HistoryItem> key={rowId}>
                         {({renderCell}) => (
                             <DataGridCell>{renderCell(item)}</DataGridCell>
                         )}

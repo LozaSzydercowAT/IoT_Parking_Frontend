@@ -8,3 +8,36 @@
     padding: 20px;
     margin: 20px auto;
 }
+
+.buttonGroup {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.balanceCard {
+    border: 1px solid gray;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--defaultDimm);
+    gap: 10px;
+    border-radius: 10px;
+    flex: 1;
+}
+
+.cardHolder {
+    overflow-x: scroll;
+    padding: 20px 0;
+    display: flex;
+    gap: var(--defaultDimm);
+}
+
+.paymentMethods {
+    margin: var(--defaultDimm) 0;
+}
+
+.history {
+    margin-top: var(--defaultDimm) 0;
+}
