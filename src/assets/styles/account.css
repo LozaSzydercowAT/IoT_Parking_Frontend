@@ -41,3 +41,7 @@
 .history {
     margin-top: var(--defaultDimm) 0;
 }
+
+.paymentProvider {
+    margin-top: 10px;
+}

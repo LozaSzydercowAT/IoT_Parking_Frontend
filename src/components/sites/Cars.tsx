@@ -101,8 +101,8 @@ const columns: TableColumnDefinition<CarItem>[] = [
 const Cars = memo(function() {
     const [data, setData] = useState<CarItem[]>([{
         carName: 'Główny samochód',
-        carModel: 'Ford Fiesta 2019',
-        licensePlate: 'KBR 13488',
+        carModel: 'Ford Fiesta MK6',
+        licensePlate: 'KBR 12345',
         lastParking: new Date(),
     }]);
     const [loading, setLoading] = useState(false);
