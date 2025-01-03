@@ -1,6 +1,16 @@
 import ParkingPlace from "../../interfaces/ParkingPlace.tsx";
 import SectorData from "../../interfaces/SectorData.tsx";
-import { Button, MessageBar, MessageBarActions, MessageBarBody, Persona, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
+import {
+    Button,
+    Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger,
+    MessageBar,
+    MessageBarActions,
+    MessageBarBody,
+    Persona,
+    Popover,
+    PopoverSurface,
+    PopoverTrigger
+} from "@fluentui/react-components";
 import {CalendarAddFilled} from "@fluentui/react-icons";
 import {Link} from "react-router-dom";
 
@@ -22,7 +32,27 @@ function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingP
                         <li>Opłata za postój: {parkingPlace.priceHour} zł/h</li>
                     </ul>
                     {(!parkingPlace.use && !parkingPlace.reserved) && (
-                        localStorage.getItem('token') ? <Button icon={<CalendarAddFilled />} appearance="primary">Zarezerwuj</Button> :
+                        localStorage.getItem('token') ? (
+                            <Dialog modalType={"alert"}>
+                                <DialogTrigger disableButtonEnhancement>
+                                    <Button icon={<CalendarAddFilled />} appearance="primary" style={{marginTop: '10px'}}>Zarezerwuj</Button>
+                                </DialogTrigger>
+                                <DialogSurface>
+                                    <DialogTitle>Zarezerwuj miejsce</DialogTitle>
+                                    <DialogBody>
+                                        <DialogContent>
+                                            Piętro {sectorData.floor}, Sektor {sectorData.sector} ({sectorData.sectorColor}), Miejsce {parkingPlace.place + 1}
+                                        </DialogContent>
+                                    </DialogBody>
+                                    <DialogActions>
+                                        <DialogTrigger disableButtonEnhancement>
+                                            <Button appearance="secondary">Anuluj</Button>
+                                        </DialogTrigger>
+                                        <Button icon={<CalendarAddFilled />} appearance="primary">Zarezerwuj</Button>
+                                    </DialogActions>
+                                </DialogSurface>
+                            </Dialog>
+                            ) :
                             <MessageBar intent="warning">
                                 <MessageBarBody>
                                     Aby zarezerwować to miejsce, należy się zalogować

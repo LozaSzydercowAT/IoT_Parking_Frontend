@@ -24,7 +24,7 @@ function App() {
                   <Routes>
                       <Route index element={<Homepage />} />
                       <Route path="login" element={<Login />} />
-                      <Route path="register" element={<Register />} />
+                      <Route path="register" element={localStorage.getItem("token") ? <Navigate replace to={"/account"} /> : <Register />} />
                       <Route path="account" element={!localStorage.getItem("token") ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
                           <Route index element={<Account />} />
                           <Route path="cars" element={<Cars />} />

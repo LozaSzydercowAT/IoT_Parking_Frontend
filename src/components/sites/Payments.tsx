@@ -1,6 +1,40 @@
 import {memo, useCallback, useState} from 'react'
-import { Button, LargeTitle, Text, Title1, Title3, CompoundButton, TableColumnDefinition, createTableColumn, TableCellLayout, DataGridProps, DataGrid, DataGridHeaderCell, DataGridRow, DataGridCell, DataGridBody, DataGridHeader, Dialog, DialogTrigger, DialogBody, DialogTitle, DialogContent, DialogActions, DialogSurface, Radio, RadioGroup, ToggleButton, useId, Label, SpinButton, SpinButtonProps, Field } from "@fluentui/react-components";
-import { AddCircleFilled, AddSquareFilled, ArrowStepBackFilled, ArrowSyncFilled, CalendarClockFilled, CheckmarkFilled, ErrorCircleFilled, PaymentFilled } from "@fluentui/react-icons";
+import {
+    Button,
+    LargeTitle,
+    Text,
+    Input,
+    Title1,
+    Title3,
+    Checkbox,
+    TableColumnDefinition,
+    createTableColumn,
+    TableCellLayout,
+    DataGridProps,
+    DataGrid,
+    DataGridHeaderCell,
+    DataGridRow,
+    DataGridCell,
+    DataGridBody,
+    DataGridHeader,
+    Dialog,
+    DialogTrigger,
+    DialogBody,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    DialogSurface,
+    Radio,
+    RadioGroup,
+    ToggleButton,
+    useId,
+    Label,
+    SpinButton,
+    SpinButtonProps,
+    Field,
+    InfoLabel,
+} from "@fluentui/react-components";
+import { AddCircleFilled, AddSquareFilled, ArrowStepBackFilled, ArrowSyncFilled, CalendarClockFilled, CheckmarkFilled, ErrorCircleFilled, PaymentFilled, WalletFilled } from "@fluentui/react-icons";
 import {PaymentHistoryItem} from "../../interfaces/PaymentHistoryItem.tsx";
 
 const getAction = (action: "topup" | "payment" | "added" | "return"): [JSX.Element, string] => {
@@ -77,6 +111,8 @@ const columns: TableColumnDefinition<PaymentHistoryItem>[] = [
 const Payments = memo(function() {
     const [data, setData] = useState<PaymentHistoryItem[]>([]);
     const [spinButtonValue, setSpinButtonValue] = useState<number | null>(20);
+    const [accountNumber, setAccountNumber] = useState('');
+    const [retError, setRetError] = useState(false);
     const [sortState, setSortState] = useState<Parameters<NonNullable<DataGridProps["onSortChange"]>>[1]>({
         sortColumn: "carId",
         sortDirection: "ascending",
@@ -145,17 +181,29 @@ const Payments = memo(function() {
         setSortState(nextSortState);
     };
 
+    const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/\s+/g, '');
+        if(value.length !== 26) {
+            setRetError(true)
+        } else setRetError(false);
+        if (/^\d*$/.test(value)) {
+            setAccountNumber(value);
+        }
+    };
+
     return <>
         <section className={'tablePosition'}>
             <LargeTitle className={"marginsDef"}>Płatności</LargeTitle>
             <Button appearance="primary" icon={<ArrowSyncFilled />} onClick={fetchData}>Odśwież</Button>
         </section>
         <section className={'paymentMethods'}>
-            <Title3>Metody płatności</Title3>
-            <div className={'cardHolder'}>
-                <div className={"balanceCard"}>
-                    <Title1 align="center">15,68 zł</Title1>
-                    <Text align="center" style={{marginBottom: '10px'}}>Dostępne środki</Text>
+            <div className={'saldoHolder'}>
+                <div className={'cashAvailable'}>
+                    <Title1>15,68 zł</Title1>
+                    <InfoLabel info={
+                        <>Dostępne środki są aktualizowane co 1 godzinę.</>}><Text>Dostępne środki</Text></InfoLabel>
+                </div>
+                <div className={'cashAvailable'}>
                     <Dialog modalType="alert">
                         <DialogTrigger disableButtonEnhancement>
                             <Button icon={<AddCircleFilled/>} appearance="primary">Doładuj środki</Button>
@@ -164,7 +212,7 @@ const Payments = memo(function() {
                             <DialogBody>
                                 <DialogTitle>Doładuj środki</DialogTitle>
                                 <DialogContent>
-                                    <Label>Wybierz kwotę:</Label>
+                                    <Label required>Wybierz kwotę:</Label>
                                     <div className={"buttonGroup"} style={{margin: '5px 0 10px 0', justifyContent: 'space-between'}}>
                                         <ToggleButton checked={checked1} onClick={() => toggleCheck(1)}>10 zł</ToggleButton>
                                         <ToggleButton checked={checked2} onClick={() => toggleCheck(2)}>20 zł</ToggleButton>
@@ -177,7 +225,7 @@ const Payments = memo(function() {
                                             <SpinButton value={spinButtonValue} onChange={onSpinButtonChange} id={cashId} />
                                         </Field>
                                     </>}
-                                    {((checked1 || checked2 || checked3 || checked4 || checked5) && !isCorrectData)  &&
+                                    {(checked1 || checked2 || checked3 || checked4 || checked5)  &&
                                         <div className={'paymentProvider'}>
                                             <Field label="Wybierz metodę płatności:">
                                                 <RadioGroup defaultValue="p24">
@@ -192,33 +240,37 @@ const Payments = memo(function() {
                                 </DialogContent>
                                 <DialogActions>
                                     <DialogTrigger disableButtonEnhancement>
-                                    <Button appearance="secondary">Anuluj</Button>
+                                        <Button appearance="secondary">Anuluj</Button>
                                     </DialogTrigger>
-                                    <Button appearance="primary" icon={<PaymentFilled />}>Doładuj</Button>
+                                    <Button appearance="primary" disabled={!checked1 && !checked2 && !checked3 && !checked4 && !checked5}>Doładuj</Button>
+                                </DialogActions>
+                            </DialogBody>
+                        </DialogSurface>
+                    </Dialog>
+                    <Dialog modalType="alert">
+                        <DialogTrigger disableButtonEnhancement>
+                            <Button icon={<WalletFilled />} appearance="secondary">Zwróć środki</Button>
+                        </DialogTrigger>
+                        <DialogSurface>
+                            <DialogBody>
+                                <DialogTitle>Zwróć środki</DialogTitle>
+                                <DialogContent>
+                                    <Field required label={"Podaj numer konta, na które zostaną przekazane środki:"} validationMessage={retError ? 'Numer konta powinien mieć dokładnie 26 cyfr' : undefined}>
+                                        <Input required id={cashId} value={accountNumber} onChange={handleAccountNumberChange} />
+                                    </Field>
+                                    <Checkbox required label="Wyrażam zgodę na pobranie opłaty serwisowej w wysokości 5 zł"
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <DialogTrigger disableButtonEnhancement>
+                                        <Button appearance="secondary">Anuluj</Button>
+                                    </DialogTrigger>
+                                    <Button appearance="primary">Zwróć</Button>
                                 </DialogActions>
                             </DialogBody>
                         </DialogSurface>
                     </Dialog>
                 </div>
-                <Dialog modalType={"alert"}>
-                    <DialogTrigger disableButtonEnhancement>
-                        <CompoundButton icon={<AddCircleFilled/>} size='large' className={'balanceCard'}>Dodaj kartę płatniczą</CompoundButton>
-                    </DialogTrigger>
-                    <DialogSurface>
-                        <DialogBody>
-                            <DialogTitle>Dodaj kartę</DialogTitle>
-                            <DialogContent>
-
-                            </DialogContent>
-                        </DialogBody>
-                        <DialogActions>
-                            <DialogTrigger disableButtonEnhancement>
-                                <Button>Anuluj</Button>
-                            </DialogTrigger>
-                            <Button appearance="primary">Dodaj</Button>
-                        </DialogActions>
-                    </DialogSurface>
-                </Dialog>
             </div>
         </section>
         <section className={'history'}>

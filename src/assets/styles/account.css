@@ -27,11 +27,10 @@
     flex: 1;
 }
 
-.cardHolder {
-    overflow-x: scroll;
+.saldoHolder {
     padding: 20px 0;
     display: flex;
-    gap: var(--defaultDimm);
+    justify-content: space-between;
 }
 
 .paymentMethods {
