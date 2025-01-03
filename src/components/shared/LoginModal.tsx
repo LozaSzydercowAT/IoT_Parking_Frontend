@@ -11,7 +11,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
     const [unexError, setUnexError] = useState(false);
     const [reqLoginInfo, setReqLoginInfo] = useState(false);
 
-    const [login, setLogin] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         setReqLoginInfo(false);
 
         axios.post('/user/login', {
-            "name": login,
+            "mail": email,
             "password": password
         })
             .then(response => {
@@ -76,8 +76,8 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                                         </MessageBarBody>
                                     </MessageBar>
                                 )}
-                                <Label required htmlFor={"login-input"} className={"labelStyle"}>Nazwa użytkownika</Label>
-                                <Input required type="text" id={"login-input"} onChange={(e) => setLogin(e.target.value)} />
+                                <Label required htmlFor={"login-input"} className={"labelStyle"}>Adres e-mail</Label>
+                                <Input required type="email" id={"login-input"} onChange={(e) => setEmail(e.target.value)} />
                                 <Label required htmlFor={"password-input"} className={"labelStyle"}>Hasło</Label>
                                 <Input required type="password" id={"password-input"} onChange={(e) => setPassword(e.target.value)} />
                                 <Text className={"passResetText"}>Zapomniałeś hasła? <Link to={"/register"} className={"passResetLink"} onClick={onClose}>Zresetuj je tutaj.</Link></Text>

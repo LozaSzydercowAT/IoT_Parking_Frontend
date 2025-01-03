@@ -11,7 +11,7 @@ function Homepage() {
 
     const handleDataFetching = () => {
         setIsLoading(true);
-        axios.get('/data/readAllDataBase')
+        axios.get('/data/readParkingInfo')
             .then((response) => {
                 setSectorsData(response.data);
                 setIsLoading(false);
