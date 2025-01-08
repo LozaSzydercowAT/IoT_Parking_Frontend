@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Button, Dialog, DialogSurface, DialogBody, DialogTitle, DialogContent, Label, Input, Text, DialogActions, Spinner, MessageBar, MessageBarBody, MessageBarTitle } from "@fluentui/react-components";
 import { Link } from "react-router-dom";
-import { LockClosedRegular, PersonAddRegular } from "@fluentui/react-icons";
+import {LockClosedRegular, PasswordFilled, PersonAddRegular, PersonRegular} from "@fluentui/react-icons";
 import axios from "../../../axiosConfig.ts";
 import "../../assets/styles/login.css";
 
@@ -10,6 +10,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
     const [loginError, setLoginError] = useState(false);
     const [unexError, setUnexError] = useState(false);
     const [reqLoginInfo, setReqLoginInfo] = useState(false);
+    const [registerSuccess, setRegisterSuccess] = useState(false);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,6 +18,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         setReqLoginInfo(urlParams.get('showInfo') === "true")
+        setRegisterSuccess(urlParams.get('registerSuccess') === "true")
     }, [])
 
     const handleLogin = (event: FormEvent<HTMLFormElement>) => {
@@ -76,10 +78,16 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                                         </MessageBarBody>
                                     </MessageBar>
                                 )}
-                                <Label required htmlFor={"login-input"} className={"labelStyle"}>Adres e-mail</Label>
-                                <Input required type="email" id={"login-input"} onChange={(e) => setEmail(e.target.value)} />
-                                <Label required htmlFor={"password-input"} className={"labelStyle"}>Hasło</Label>
-                                <Input required type="password" id={"password-input"} onChange={(e) => setPassword(e.target.value)} />
+                                {registerSuccess && (
+                                    <MessageBar intent={"success"}>
+                                        <MessageBarBody>
+                                            <MessageBarTitle>Konto zostało utworzone!</MessageBarTitle> Teraz możesz się zalogować.
+                                        </MessageBarBody>
+                                    </MessageBar>
+                                )
+                                }
+                                <Input required contentBefore={<PersonRegular />} type="email" id={"login-input"} placeholder="Adres e-mail" onChange={(e) => setEmail(e.target.value)} style={{margin: '10px 0'}} />
+                                <Input required type="password" contentBefore={<PasswordFilled />} id={"password-input"} placeholder="Hasło" onChange={(e) => setPassword(e.target.value)} />
                                 <Text className={"passResetText"}>Zapomniałeś hasła? <Link to={"/register"} className={"passResetLink"} onClick={onClose}>Zresetuj je tutaj.</Link></Text>
                             </DialogContent>
                         </DialogBody>

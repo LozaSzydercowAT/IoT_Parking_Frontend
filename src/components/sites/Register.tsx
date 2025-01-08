@@ -1,19 +1,35 @@
 import {useState, FormEvent, ChangeEvent} from "react";
-import {Button, Switch, Field, Input, MessageBar, MessageBarBody, MessageBarTitle, Spinner} from "@fluentui/react-components";
+import {
+    Button,
+    Switch,
+    Field,
+    Input,
+    MessageBar,
+    MessageBarBody,
+    MessageBarTitle,
+    Spinner,
+    Text,
+} from "@fluentui/react-components";
 import "../../assets/styles/login.css";
 import axios from "../../../axiosConfig.ts";
 
 interface Errors {
-    username?: string;
+    name?: string;
+    surname?: string;
     email?: string;
+    mobileNumber?: string;
+    carPlate?: string;
     password?: string;
     password2?: string;
     isAccepted?: string;
 }
 
 interface Account {
-    username: string;
+    name: string;
+    surname: string;
     email: string;
+    mobileNumber: string;
+    carPlate: string;
     password: string;
     password2: string;
     isAccepted: boolean;
@@ -21,8 +37,11 @@ interface Account {
 
 function Register() {
     const [account, setAccount] = useState<Account>({
-        username: '',
+        name: '',
+        surname: '',
         email: '',
+        mobileNumber: '',
+        carPlate: '',
         password: '',
         password2: '',
         isAccepted: false
@@ -34,32 +53,79 @@ function Register() {
     const [networkError, setNetworkError] = useState(false);
     const [isAction, setAction] = useState(false);
 
+    const validatePassword = (passwd: string): boolean => {
+        const regexDuzaLitera = /[A-Z]/;
+        const regexMalaLitera = /[a-z]/;
+        const regexCyfra = /\d/;
+        const regexZnakSpecjalny = /[!@#$%^&*(),.?":{}|<>]/;
+
+        return regexDuzaLitera.test(passwd) && regexMalaLitera.test(passwd) && regexCyfra.test(passwd) && regexZnakSpecjalny.test(passwd) && passwd.length >= 8;
+    }
+
     const validateForm = () => {
-        setFormError(true);
+        const nameRegex = /^[A-Za-z]+$/;
+        const surnameRegex = /^[A-Za-z-]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const mobileNumberRegex = /^\d{9}$/;
+
+        setErrors({});
+        setFormError(false);
+
+        if(!nameRegex.test(account.name)) {
+            setErrors({name: "Nieprawidłowe imię!"})
+            setFormError(true);
+        }
+        if(!surnameRegex.test(account.surname)) {
+            setErrors({surname: 'Nieprawidłowe nazwisko!'})
+            setFormError(true);
+        }
+        if(!emailRegex.test(account.email)) {
+            setErrors({email: 'Nieprawidłowy adres e-mail!'})
+            setFormError(true);
+        }
+        if(!mobileNumberRegex.test(account.mobileNumber) || account.mobileNumber.length !== 9) {
+            setErrors({mobileNumber: 'Nieprawidłowy numer telefonu!'})
+            setFormError(true);
+        }
+        if(account.password !== account.password2) {
+            setErrors({password: 'Hasła nie są identyczne!', password2: 'Hasła nie są identyczne!'})
+            setFormError(true);
+        } else if(!validatePassword(account.password)) {
+            setErrors({password: 'Hasło nie spełnia kryteriów bezpieczeństwa!'})
+            setFormError(true);
+        }
     }
 
     const handleRegister = (event: FormEvent<HTMLFormElement>)=> {
         event.preventDefault()
         setAction(true)
-        //validateForm()
+        setRegisterError(false)
+        setNetworkError(false);
 
-        //if(errors || formError) {
-        //    setAction(false);
-        //    return;
-        //} else {
-        //    axios.post('/user/register', {
-        //        username: account.username,
-        //        email: account.email,
-        //        password: account.password
-        //    }).then((response) => {
-        //        localStorage.setItem('token', response.data.token)
-        //        window.location.replace('/')
-        //   }).catch((error) => {
-        //        if(error.response && error.response.status === 401) setRegisterError(true)
-        //        else setNetworkError(true);
-        //    })
-        //}
-        //setAction(false)
+        validateForm()
+
+        if(errors || formError) {
+            setAction(false);
+            return;
+        } else {
+            axios.post('/user/newUser', {
+                name: account.name,
+                surname: account.surname,
+                phone: account.mobileNumber,
+                email: account.email,
+                registeration_number: account.carPlate,
+                password: account.password
+            }).then((response) => {
+                if(response.status === 201) {
+                    window.location.replace('/login?registerSuccess=true');
+                }
+           }).catch((error) => {
+                if(error.response && error.response.status === 401) setRegisterError(true)
+                else setNetworkError(true);
+            }).finally(() => {
+                setAction(false)
+            })
+        }
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -78,6 +144,14 @@ function Register() {
         console.log(data.checked);
     }
 
+    const printErrors = () => {
+        const errorMessages = [];
+        for(const [key, value] of Object.entries(errors)) {
+            if (value && value !== '') { errorMessages.push(value); }
+        }
+        return errorMessages.map((message, index) => <li key={index}>{message}</li>);
+    }
+
     return <div className={'maxWidth'}>
         <h1>Tworzenie nowego użytkownika</h1>
         {registerError && <></>}
@@ -87,31 +161,40 @@ function Register() {
                 Wystąpił błąd w trakcie komunikacji z serwerem.
             </MessageBarBody>
         </MessageBar>}
+        {formError &&
         <MessageBar intent="error" layout="multiline">
             <MessageBarBody>
                 <MessageBarTitle>W formularzu znajdują się błędy! </MessageBarTitle>
                 <ul style={{paddingLeft: '20px', margin: '5px 0'}}>
-                    <li>Niepoprawna nazwa użytkownika!</li>
-                    <li>Niepoprawny adres e-mailowy!</li>
-                    <li>Hasła są różne!</li>
-                    <li>Hasło nie spełnia norm bezpieczeństwa!</li>
+                    {printErrors()}
                 </ul>
             </MessageBarBody>
-        </MessageBar>
+        </MessageBar>}
         <form onSubmit={handleRegister}>
-            <Field required label="Nazwa użytkownika" className="labelStyle">
-                <Input required disabled={isAction} type="text" name="username" value={account.username} onChange={handleChange} />
+            <Field required label="Imię" className="labelStyle" validationMessage={account.name}>
+                <Input required disabled={isAction} type="text" name="name" value={account.name} onChange={handleChange} />
             </Field>
-            <Field required label="Adres e-mail" className="labelStyle">
-                <Input required disabled={isAction} type="email" name="email" value={account.email} onChange={handleChange} />
+            <Field required label="Nazwisko" className="labelStyle" validationMessage={account.surname}>
+                <Input required disabled={isAction} type="text" name="surname" value={account.surname} onChange={handleChange} />
             </Field>
-            <Field required label="Hasło" className="labelStyle">
+            <Field required label="Adres e-mail" className="labelStyle" validationMessage={account.email}>
+                <Input required disabled={isAction} contentBefore={<Text size={400}>@</Text>} type="email" name="email" value={account.email} onChange={handleChange} />
+            </Field>
+            <Field required label="Numer telefonu" className="labelStyle" validationMessage={account.mobileNumber}>
+                <Input required disabled={isAction} contentBefore={<Text size={400}>+48</Text>} type="text" name="telephone" value={account.mobileNumber} onChange={handleChange} />
+            </Field>
+            <Field required label="Numer rejestracyjny" className="labelStyle" validationMessage={account.carPlate}>
+                <Input required disabled={isAction} type="text" name="registeration" value={account.carPlate} onChange={handleChange} />
+            </Field>
+            <Field required label="Hasło" className="labelStyle" validationMessage={account.password}>
                 <Input required disabled={isAction} type="password" name="password" value={account.password} onChange={handleChange} />
             </Field>
-            <Field required label="Powtórz hasło" className="labelStyle">
+            <Field required label="Powtórz hasło" className="labelStyle" validationMessage={errors.password2}>
                 <Input required disabled={isAction} type="password" name="password2" value={account.password2} onChange={handleChange} />
             </Field>
-            <div><Switch required label="Akceptuję regulamin usługi" name="isAccepted" checked={account.isAccepted} onChange={handleAcceptation} className="labelStyle" /></div>
+            <Field validationMessage={errors.isAccepted}>
+                <Switch required label="Akceptuję regulamin usługi" name="isAccepted" checked={account.isAccepted} onChange={handleAcceptation} className="labelStyle"/>
+            </Field>
             <div className={"bottomContainer"}>
                 <Button type="submit" disabled={isAction} appearance="primary">Zarejestruj</Button>
                 {isAction && <Spinner size={'tiny'} label={'Tworzenie nowego użytkownika'} /> }

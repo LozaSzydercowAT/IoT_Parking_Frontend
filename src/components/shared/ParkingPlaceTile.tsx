@@ -1,16 +1,6 @@
 import ParkingPlace from "../../interfaces/ParkingPlace.tsx";
 import SectorData from "../../interfaces/SectorData.tsx";
-import {
-    Button,
-    Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger,
-    MessageBar,
-    MessageBarActions,
-    MessageBarBody,
-    Persona,
-    Popover,
-    PopoverSurface,
-    PopoverTrigger
-} from "@fluentui/react-components";
+import { Button, Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger, MessageBar, MessageBarActions, MessageBarBody, Persona, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import {CalendarAddFilled} from "@fluentui/react-icons";
 import {Link} from "react-router-dom";
 
@@ -41,7 +31,12 @@ function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingP
                                     <DialogTitle>Zarezerwuj miejsce</DialogTitle>
                                     <DialogBody>
                                         <DialogContent>
-                                            Piętro {sectorData.floor}, Sektor {sectorData.sector} ({sectorData.sectorColor}), Miejsce {parkingPlace.place + 1}
+                                            Czy napewno chcesz zarezerwować to miejsce?
+                                            <ul>
+                                                <li>Piętro {sectorData.floor}</li>
+                                                <li>Sektor {sectorData.sector} ({sectorData.sectorColor})</li>
+                                                <li>Miejsce {parkingPlace.place + 1}</li>
+                                            </ul>
                                         </DialogContent>
                                     </DialogBody>
                                     <DialogActions>

@@ -26,6 +26,7 @@ function Navbar() {
             })
                 .then((response: { data: SetStateAction<PersonData | null>; }) => {
                     setPerson(response.data);
+                    console.log(response.data);
                     setIsLoggedIn(true);
                 }).catch(error => {
                     console.log(error);
@@ -63,7 +64,7 @@ function Navbar() {
                         </Skeleton> : <MenuItem>
                             <Persona
                                 name={person?.name + ' ' + person?.surname}
-                                secondaryText={'Dostępne środki: ' + person?.balance + " zł"}
+                                secondaryText={'Dostępne środki: ' + person?.account_balance + " zł"}
                                 presence={{ status: "available" }}
                                 style={{ padding: '5px 10px', transform: 'translateY(-3px)' }}/>
                         </MenuItem>}
