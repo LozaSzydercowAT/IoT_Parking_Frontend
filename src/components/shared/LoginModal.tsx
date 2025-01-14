@@ -1,12 +1,9 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Button, Dialog, DialogSurface, DialogBody, DialogTitle, DialogContent, Label, Input, Text, DialogActions, Spinner, MessageBar, MessageBarBody, MessageBarTitle } from "@fluentui/react-components";
+import { Button, Dialog, DialogSurface, DialogBody, DialogTitle, DialogContent, Input, Text, DialogActions, Spinner, MessageBar, MessageBarBody, MessageBarTitle } from "@fluentui/react-components";
 import { Link } from "react-router-dom";
 import {LockClosedRegular, PasswordFilled, PersonAddRegular, PersonRegular} from "@fluentui/react-icons";
 import axios from "../../../axiosConfig.ts";
 import "../../assets/styles/login.css";
-import {jwtDecode} from "jwt-decode";
-
-
 
 const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
     const [isAction, setActionStatus] = useState(false);
@@ -37,7 +34,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         })
         .then(response => {
             console.log(response.data.message);
-            const {id, token, expirationTime } = response.data;
+            const {id,token, expirationTime } = response.data;
             
             // Zapisz token i czas wygaśnięcia
             localStorage.setItem('token', id);
