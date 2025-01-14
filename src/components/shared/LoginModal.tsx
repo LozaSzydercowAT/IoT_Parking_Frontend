@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import {LockClosedRegular, PasswordFilled, PersonAddRegular, PersonRegular} from "@fluentui/react-icons";
 import axios from "../../../axiosConfig.ts";
 import "../../assets/styles/login.css";
+import {jwtDecode} from "jwt-decode";
+
+
 
 const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
     const [isAction, setActionStatus] = useState(false);
@@ -27,21 +30,40 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         setLoginError(false);
         setUnexError(false);
         setReqLoginInfo(false);
-
+    
         axios.post('/user/login', {
-            "mail": email,
-            "password": password
+            mail: email,
+            password: password
         })
-            .then(response => {
-                console.log(response.data.message);
-                localStorage.setItem('token', response.data.id);
-                window.location.replace('/');
-            }).catch(error => {
+        .then(response => {
+            console.log(response.data.message);
+            const {id, token, expirationTime } = response.data;
+            
+            // Zapisz token i czas wygaśnięcia
+            localStorage.setItem('token', id);
+            localStorage.setItem('expirationTime', expirationTime.toString());
+    
+            // Automatyczne wylogowanie po upływie czasu
+            const timeLeft = expirationTime - Date.now();
+            console.log(timeLeft);
+            if (timeLeft > 0) {
+                setTimeout(() => {
+                    localStorage.removeItem('token'); // Usuń token
+                    localStorage.removeItem('expirationTime'); // Usuń czas wygaśnięcia
+                    alert("Sesja wygasła. Zaloguj się ponownie.");
+                    window.location.replace("/");
+                }, timeLeft);
+            }
+    
+            window.location.replace('/');
+        })
+        .catch(error => {
             if (error.response && error.response.status === 401) setLoginError(true);
             else setUnexError(true);
             setActionStatus(false);
         });
     };
+    
 
     return (
         <Dialog modalType="alert" open={isOpen} onOpenChange={(_event, data) => data.open ? null : onClose()}>

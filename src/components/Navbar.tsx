@@ -10,6 +10,7 @@ import axios from "../../axiosConfig.ts"
 function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [person, setPerson] = useState<PersonData | null>(null);
+    
     const handleLogout = () => {
         localStorage.removeItem('token');
         window.location.replace("/");
@@ -33,6 +34,7 @@ function Navbar() {
             })
         }
     }, [isLoggedIn])
+    
 
     const renderHamburgerWithToolTip = () => {
         return (
