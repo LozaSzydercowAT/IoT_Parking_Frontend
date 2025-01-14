@@ -3,8 +3,21 @@ import SectorData from "../../interfaces/SectorData.tsx";
 import { Button, Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger, MessageBar, MessageBarActions, MessageBarBody, Persona, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import {CalendarAddFilled} from "@fluentui/react-icons";
 import {Link} from "react-router-dom";
+import axios from "../../../axiosConfig.ts";
 
 function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingPlace, sectorData: SectorData }) {
+    const handleReserve = async(parkingPlace: number, sectorNum: number) => {
+        axios.put('/data/setTakeReserve', {
+            place: parkingPlace,
+            sector: sectorNum
+        }).then(response => {
+            if(response.data.message === 'get booked') {
+                console.log('Zarezerwowano!');
+
+            }
+        });
+    }
+
     return (
         <>
             <Popover>
@@ -43,7 +56,9 @@ function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingP
                                         <DialogTrigger disableButtonEnhancement>
                                             <Button appearance="secondary">Anuluj</Button>
                                         </DialogTrigger>
-                                        <Button icon={<CalendarAddFilled />} appearance="primary">Zarezerwuj</Button>
+                                        <DialogTrigger disableButtonEnhancement>
+                                            <Button icon={<CalendarAddFilled />} appearance="primary" onClick={() => handleReserve(parkingPlace.place, sectorData.sector)}>Zarezerwuj</Button>
+                                        </DialogTrigger>
                                     </DialogActions>
                                 </DialogSurface>
                             </Dialog>
