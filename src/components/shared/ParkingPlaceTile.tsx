@@ -13,7 +13,17 @@ function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingP
         }).then(response => {
             if(response.data.message === 'get booked') {
                 console.log('Zarezerwowano!');
+            }
+        });
+    }
 
+    const handleFree = async(parkingPlace: number, sectorNum: number) => {
+        axios.put('/data/setDropReserve', {
+            place: parkingPlace,
+            sector: sectorNum
+        }).then(response => {
+            if(response.data.message === 'drop book') {
+                console.log('Rezerwacja odwołana!');
             }
         });
     }
@@ -34,16 +44,17 @@ function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingP
                         <li>{(parkingPlace.charger !== 0) ? "Miejsce dla pojazdów elektrycznych (ładowarka " + parkingPlace.charger + " W)" : "Dla wszystkich pojazdów"}</li>
                         <li>Opłata za postój: {parkingPlace.priceHour} zł/h</li>
                     </ul>
-                    {(!parkingPlace.use && !parkingPlace.reserved) && (
+                    {!parkingPlace.use && (
                         localStorage.getItem('token') ? (
                             <Dialog modalType={"alert"}>
                                 <DialogTrigger disableButtonEnhancement>
-                                    <Button icon={<CalendarAddFilled />} appearance="primary" style={{marginTop: '10px'}}>Zarezerwuj</Button>
+                                    {!parkingPlace.reserved ? <Button icon={<CalendarAddFilled />} appearance="primary" style={{marginTop: '10px'}}>Zarezerwuj</Button> : <Button appearance="primary" style={{marginTop: '10px'}}>Odwołaj rezerwacje</Button>}
                                 </DialogTrigger>
                                 <DialogSurface>
-                                    <DialogTitle>Zarezerwuj miejsce</DialogTitle>
+                                    <DialogTitle>{!parkingPlace.reserved ? "Zarezerwuj miejsce" : "Odwołaj rezerwację"}</DialogTitle>
                                     <DialogBody>
                                         <DialogContent>
+                                            {!parkingPlace.reserved ? "Czy napewno chcesz zarezerwować to miejsce?" : "Czy chcesz odwołać rezerwację?"}
                                             Czy napewno chcesz zarezerwować to miejsce?
                                             <ul>
                                                 <li>Piętro {sectorData.floor}</li>
@@ -57,7 +68,9 @@ function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingP
                                             <Button appearance="secondary">Anuluj</Button>
                                         </DialogTrigger>
                                         <DialogTrigger disableButtonEnhancement>
-                                            <Button icon={<CalendarAddFilled />} appearance="primary" onClick={() => handleReserve(parkingPlace.place, sectorData.sector)}>Zarezerwuj</Button>
+                                            {!parkingPlace.reserved ?
+                                            <Button icon={<CalendarAddFilled />} appearance="primary" onClick={() => handleReserve(parkingPlace.place, sectorData.sector)}>Zarezerwuj</Button> : <Button appearance="primary" onClick={() => handleFree(parkingPlace.place, sectorData.sector)}>Odwołaj</Button>}
+
                                         </DialogTrigger>
                                     </DialogActions>
                                 </DialogSurface>
