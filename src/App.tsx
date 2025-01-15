@@ -8,7 +8,6 @@ const Homepage = lazy(() => import('./components/sites/Homepage'));
 const Register = lazy(() => import('./components/sites/Register'));
 const AccountPage = lazy(() => import('./components/sites/AccountPage'));
 const Account = lazy(() => import('./components/sites/Account'));
-const Cars = lazy(() => import('./components/sites/Cars'));
 const Payments = lazy(() => import('./components/sites/Payments'));
 const History = lazy(() => import('./components/sites/History'));
 const Messages = lazy(() => import('./components/sites/Messages'));
@@ -27,7 +26,6 @@ function App() {
                       <Route path="register" element={localStorage.getItem("token") ? <Navigate replace to={"/account"} /> : <Register />} />
                       <Route path="account" element={!localStorage.getItem("token") ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
                           <Route index element={<Account />} />
-                          <Route path="cars" element={<Cars />} />
                           <Route path="payments" element={<Payments />} />
                           <Route path="history" element={<History />} />
                           <Route path="messages" element={<Messages />} />

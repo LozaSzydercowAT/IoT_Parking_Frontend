@@ -11,7 +11,6 @@ function AccountPage() {
     const location = useLocation();
 
     const Person = bundleIcon(PersonFilled, PersonRegular);
-    const Vehicle = bundleIcon(VehicleCarFilled, VehicleCarRegular);
     const Payment = bundleIcon(WalletCreditCardFilled, WalletCreditCardRegular);
     const History = bundleIcon(HistoryFilled, HistoryRegular);
     const Messages = bundleIcon(NotebookEyeFilled, NotebookEyeRegular);
@@ -33,7 +32,6 @@ function AccountPage() {
     return <>
         <TabList size="large" style={{justifyContent: "center", gap: "40px"}} onTabSelect={handleTabSelect} selectedValue={selectedTab}>
             <Tab value="account" icon={<Person />}>Konto</Tab>
-            <Tab value="cars" icon={<Vehicle />}>Pojazdy</Tab>
             <Tab value="payments" icon={<Payment />}>Płatności</Tab>
             <Tab value="history" icon={<History />}>Historia</Tab>
             <Tab value="messages" icon={<Messages />}>Wiadomości</Tab>

@@ -55,7 +55,6 @@ function ParkingPlaceTile({ parkingPlace, sectorData }: { parkingPlace: ParkingP
                                     <DialogBody>
                                         <DialogContent>
                                             {!parkingPlace.reserved ? "Czy napewno chcesz zarezerwować to miejsce?" : "Czy chcesz odwołać rezerwację?"}
-                                            Czy napewno chcesz zarezerwować to miejsce?
                                             <ul>
                                                 <li>Piętro {sectorData.floor}</li>
                                                 <li>Sektor {sectorData.sector} ({sectorData.sectorColor})</li>

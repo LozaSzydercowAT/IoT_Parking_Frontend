@@ -15,7 +15,6 @@ function Homepage() {
             .then((response) => {
                 setSectorsData(response.data);
                 setIsLoading(false);
-                console.log(response.data);
             })
         .catch((error) => {
             console.log(error);

@@ -24,10 +24,8 @@ function Navbar() {
                     'Content-Type': ' application/json',
                 }
             })
-                .then((response: { data: SetStateAction<PersonData | null>; }) => {
+                .then(response => {
                     setPerson(response.data);
-                    console.log(response.data);
-                    setIsLoggedIn(true);
                 }).catch(error => {
                     console.log(error);
             })
@@ -64,7 +62,7 @@ function Navbar() {
                         </Skeleton> : <MenuItem>
                             <Persona
                                 name={person?.name + ' ' + person?.surname}
-                                secondaryText={'Dostępne środki: ' + person?.account_balance + " zł"}
+                                secondaryText={'Dostępne środki: ' + person?.balance.toFixed(2) + " zł"}
                                 presence={{ status: "available" }}
                                 style={{ padding: '5px 10px', transform: 'translateY(-3px)' }}/>
                         </MenuItem>}
@@ -76,9 +74,6 @@ function Navbar() {
                             </Link>
                             <MenuItem icon={<ArrowExitFilled />} onClick={handleLogout}>Wyloguj się</MenuItem>
                             <MenuDivider />
-                            <Link to={"/account/cars"}>
-                                <MenuItem icon={<VehicleCarFilled />}>Pojazdy</MenuItem>
-                            </Link>
                             <Link to={"/account/payments"}>
                                 <MenuItem icon={<WalletCreditCardFilled />}>Płatności</MenuItem>
                             </Link>

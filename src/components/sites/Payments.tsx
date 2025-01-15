@@ -177,6 +177,10 @@ const Payments = memo(function() {
 
     }
 
+    const handleBalanceAdding = () => {
+
+    }
+
     const onSortChange: DataGridProps["onSortChange"] = (_e, nextSortState) => {
         setSortState(nextSortState);
     };
@@ -242,7 +246,7 @@ const Payments = memo(function() {
                                     <DialogTrigger disableButtonEnhancement>
                                         <Button appearance="secondary">Anuluj</Button>
                                     </DialogTrigger>
-                                    <Button appearance="primary" disabled={!checked1 && !checked2 && !checked3 && !checked4 && !checked5}>Doładuj</Button>
+                                    <Button appearance="primary" disabled={!checked1 && !checked2 && !checked3 && !checked4 && !checked5} onClick={handleBalanceAdding}>Doładuj</Button>
                                 </DialogActions>
                             </DialogBody>
                         </DialogSurface>
