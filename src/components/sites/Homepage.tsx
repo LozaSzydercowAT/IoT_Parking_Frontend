@@ -36,7 +36,6 @@ function Homepage() {
     ws.onmessage = (message) => {
       console.log("Message received:", message.data);
       if (message.data === "refresh") {
-        // Fetch updated data on 'refresh' message
         handleDataFetching();
       }
     };
@@ -49,7 +48,6 @@ function Homepage() {
       console.log("WebSocket connection closed");
     };
 
-    // Cleanup WebSocket on component unmount
     return () => {
       ws.close();
     };
