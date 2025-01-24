@@ -1,7 +1,6 @@
-import { Button, Menu, MenuDivider, MenuList, MenuItem, MenuPopover, MenuTrigger, Persona, Tooltip, Skeleton, SkeletonItem } from "@fluentui/react-components";
+import { Button, Menu, MenuDivider, MenuList, MenuItem, MenuPopover, MenuTrigger, Persona, Skeleton, SkeletonItem } from "@fluentui/react-components";
 import { ArrowExitFilled, HistoryFilled, PersonFilled, PersonRegular, WalletCreditCardFilled, NotebookEyeFilled } from "@fluentui/react-icons";
 import { Link } from "react-router-dom";
-import { Hamburger } from "@fluentui/react-nav-preview";
 import "../assets/styles/login.css";
 import PersonData from "../interfaces/PersonData"
 import { useEffect, useState} from "react";
@@ -11,7 +10,7 @@ import {isExpired} from "react-jwt";
 function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [person, setPerson] = useState<PersonData | null>(null);
-    
+
     const handleLogout = () => {
         axios.post('/user/logout', {
             headers: {
@@ -44,20 +43,10 @@ function Navbar() {
             })
         }
     }, [isLoggedIn])
-    
-
-    const renderHamburgerWithToolTip = () => {
-        return (
-            <Tooltip content="Menu" relationship="label">
-                <Hamburger />
-            </Tooltip>
-        );
-    };
 
     return (
         <nav>
             <div className={"logoDiv"}>
-                {renderHamburgerWithToolTip()}
                 <Link to={"/"} style={{ marginLeft: '10px' }}>
                     <h1 className={"logo"}>Inteligentny parking</h1>
                 </Link>

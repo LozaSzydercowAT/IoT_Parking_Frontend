@@ -107,7 +107,6 @@ const Account = memo(function() {
                 }
             })
         }
-
     }
 
     return <>
@@ -143,7 +142,7 @@ const Account = memo(function() {
                     </DialogContent>
                     <DialogActions>
                         <DialogTrigger disableButtonEnhancement>
-                            <Button appearance="secondary" disabled={isAction}>Anuluj</Button>
+                            <Button appearance="secondary" disabled={isAction} onClick={() => setPasswordModal(false)}>Anuluj</Button>
                         </DialogTrigger>
                         <Button appearance="primary" onClick={handlePasswordUpdate} disabled={isAction} icon={icon}>{isAction ? "Zmiana hasła" : "Zmień hasło"}</Button>
                     </DialogActions>

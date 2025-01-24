@@ -33,7 +33,6 @@ function About() {
             ))}
         </ul>
         <Subtitle2>Projekt na przedmiot <i>Technologie webowe w aplikacjach Internetu Rzeczy</i></Subtitle2>
-        <Subtitle2>mgr inż. Dariusz Piwko</Subtitle2>
     </div>
 }
 

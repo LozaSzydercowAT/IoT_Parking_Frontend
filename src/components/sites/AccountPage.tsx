@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import {Outlet, useNavigate, useLocation} from "react-router-dom";
 import '../../assets/styles/account.css'
 import { Tab, TabList, TabValue, SelectTabData, SelectTabEvent } from "@fluentui/react-components";
-import { HistoryFilled, PersonFilled, PersonRegular, VehicleCarFilled, VehicleCarRegular, WalletCreditCardFilled, NotebookEyeFilled, bundleIcon, WalletCreditCardRegular, HistoryRegular, NotebookEyeRegular } from "@fluentui/react-icons";
+import { HistoryFilled, PersonFilled, PersonRegular, WalletCreditCardFilled, NotebookEyeFilled, bundleIcon, WalletCreditCardRegular, HistoryRegular, NotebookEyeRegular } from "@fluentui/react-icons";
 import '../../assets/styles/account.css'
 
 function AccountPage() {

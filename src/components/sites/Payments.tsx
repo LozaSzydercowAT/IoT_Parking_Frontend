@@ -37,6 +37,7 @@ import { AddCircleFilled, AddSquareFilled, ArrowStepBackFilled, ArrowSyncFilled,
     DismissRegular, ErrorCircleFilled, PaymentFilled } from "@fluentui/react-icons";
 import {PaymentHistoryItem} from "../../interfaces/PaymentHistoryItem.tsx";
 import axios from "../../../axiosConfig.ts";
+import PersonData from "../../interfaces/PersonData.tsx";
 
 const getAction = (action: "topup" | "payment" | "added" | "return"): [JSX.Element, string] => {
     switch (action) {
@@ -111,6 +112,7 @@ const columns: TableColumnDefinition<PaymentHistoryItem>[] = [
 
 const Payments = memo(function() {
     const [data, setData] = useState<PaymentHistoryItem[]>([]);
+    const [person, setPerson] = useState<PersonData | null>(null);
     const [spinButtonValue, setSpinButtonValue] = useState<number | null>(20);
     const [retError, setRetError] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -123,7 +125,20 @@ const Payments = memo(function() {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         setSuccessInfo(urlParams.get('success') === "true")
-    }, []);
+
+        axios.get("/user", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json',
+                'x-auth-token': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                setPerson(response.data);
+            }).catch(error => {
+            console.log(error);
+        })
+    }, [person, data]);
 
     const [checked1, setChecked1] = useState(false);
     const [checked2, setChecked2] = useState(false);
@@ -234,7 +249,7 @@ const Payments = memo(function() {
         <section className={'paymentMethods'}>
             <div className={'saldoHolder'}>
                 <div className={'cashAvailable'}>
-                    <Title1>15,68 zł</Title1>
+                    <Title1>{person?.balance || "0.00"} zł</Title1>
                     <InfoLabel info={
                         <>Dostępne środki są aktualizowane co 1 godzinę.</>}><Text>Dostępne środki</Text></InfoLabel>
                 </div>
@@ -280,7 +295,7 @@ const Payments = memo(function() {
                                     </DialogContent>
                                     <DialogActions>
                                         <DialogTrigger disableButtonEnhancement>
-                                            <Button appearance="secondary">Anuluj</Button>
+                                            <Button appearance="secondary" onClick={() => setDialogOpen(false)}>Anuluj</Button>
                                         </DialogTrigger>
                                         <Button appearance="primary" disabled={!checked1 && !checked2 && !checked3 && !checked4 && !checked5} onClick={handleBalanceAdding}>Doładuj</Button>
                                     </DialogActions>
