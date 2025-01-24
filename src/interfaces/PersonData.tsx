@@ -1,6 +1,7 @@
 export default interface PersonData {
+    id: string;
     name: string;
     surname: string;
-    account_balance: number;
+    balance: number;
     role: "user" | "admin";
 }

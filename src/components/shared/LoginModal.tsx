@@ -33,11 +33,11 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
             password: password
         })
         .then(response => {
-            console.log(response.data.message);
-            const {id,token, expirationTime } = response.data;
+            console.log(response.data);
+            const {token, expirationTime } = response.data;
             
             // Zapisz token i czas wygaśnięcia
-            localStorage.setItem('token', id);
+            localStorage.setItem('token', token);
             localStorage.setItem('expirationTime', expirationTime.toString());
     
             // Automatyczne wylogowanie po upływie czasu

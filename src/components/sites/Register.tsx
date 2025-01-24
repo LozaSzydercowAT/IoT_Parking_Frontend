@@ -104,7 +104,7 @@ function Register() {
 
         validateForm()
 
-        if(errors || formError) {
+        if(formError) {
             setAction(false);
             return;
         } else {
@@ -141,7 +141,6 @@ function Register() {
             ...prevAccount,
             isAccepted: data.checked
         }));
-        console.log(data.checked);
     }
 
     const printErrors = () => {
@@ -171,22 +170,22 @@ function Register() {
             </MessageBarBody>
         </MessageBar>}
         <form onSubmit={handleRegister}>
-            <Field required label="Imię" className="labelStyle" validationMessage={account.name}>
+            <Field required label="Imię" className="labelStyle" validationMessage={errors.name}>
                 <Input required disabled={isAction} type="text" name="name" value={account.name} onChange={handleChange} />
             </Field>
-            <Field required label="Nazwisko" className="labelStyle" validationMessage={account.surname}>
+            <Field required label="Nazwisko" className="labelStyle" validationMessage={errors.surname}>
                 <Input required disabled={isAction} type="text" name="surname" value={account.surname} onChange={handleChange} />
             </Field>
-            <Field required label="Adres e-mail" className="labelStyle" validationMessage={account.email}>
+            <Field required label="Adres e-mail" className="labelStyle" validationMessage={errors.email}>
                 <Input required disabled={isAction} contentBefore={<Text size={400}>@</Text>} type="email" name="email" value={account.email} onChange={handleChange} />
             </Field>
-            <Field required label="Numer telefonu" className="labelStyle" validationMessage={account.mobileNumber}>
-                <Input required disabled={isAction} contentBefore={<Text size={400}>+48</Text>} type="text" name="telephone" value={account.mobileNumber} onChange={handleChange} />
+            <Field required label="Numer telefonu" className="labelStyle" validationMessage={errors.mobileNumber}>
+                <Input required disabled={isAction} contentBefore={<Text size={400}>+48</Text>} type="text" name="mobileNumber" value={account.mobileNumber} onChange={handleChange} />
             </Field>
-            <Field required label="Numer rejestracyjny" className="labelStyle" validationMessage={account.carPlate}>
-                <Input required disabled={isAction} type="text" name="registeration" value={account.carPlate} onChange={handleChange} />
+            <Field required label="Numer rejestracyjny" className="labelStyle" validationMessage={errors.carPlate}>
+                <Input required disabled={isAction} type="text" name="carPlate" value={account.carPlate} onChange={handleChange} />
             </Field>
-            <Field required label="Hasło" className="labelStyle" validationMessage={account.password}>
+            <Field required label="Hasło" className="labelStyle" validationMessage={errors.password}>
                 <Input required disabled={isAction} type="password" name="password" value={account.password} onChange={handleChange} />
             </Field>
             <Field required label="Powtórz hasło" className="labelStyle" validationMessage={errors.password2}>

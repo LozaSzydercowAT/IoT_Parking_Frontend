@@ -9,19 +9,17 @@ function Homepage() {
   const [isLoading, setIsLoading] = useState(false);
   const [sectorsData, setSectorsData] = useState<SectorData[]>([]);
 
-  const handleDataFetching = () => {
-    setIsLoading(true);
-    axios
-      .get("/data/readParkingInfo")
-      .then((response) => {
-        setSectorsData(response.data);
-        setIsLoading(false);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+    const handleDataFetching = () => {
+        setIsLoading(true);
+        axios.get('/data/readParkingInfo')
+            .then((response) => {
+                setSectorsData(response.data);
+                setIsLoading(false);
+            })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
 
   useEffect(() => {
     handleDataFetching();
