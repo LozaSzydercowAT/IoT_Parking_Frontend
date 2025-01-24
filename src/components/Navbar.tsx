@@ -1,27 +1,39 @@
 import { Button, Menu, MenuDivider, MenuList, MenuItem, MenuPopover, MenuTrigger, Persona, Tooltip, Skeleton, SkeletonItem } from "@fluentui/react-components";
-import { ArrowExitFilled, HistoryFilled, PersonFilled, PersonRegular, VehicleCarFilled, WalletCreditCardFilled, NotebookEyeFilled } from "@fluentui/react-icons";
+import { ArrowExitFilled, HistoryFilled, PersonFilled, PersonRegular, WalletCreditCardFilled, NotebookEyeFilled } from "@fluentui/react-icons";
 import { Link } from "react-router-dom";
 import { Hamburger } from "@fluentui/react-nav-preview";
 import "../assets/styles/login.css";
 import PersonData from "../interfaces/PersonData"
-import {SetStateAction, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import axios from "../../axiosConfig.ts"
+import {isExpired} from "react-jwt";
 
 function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [person, setPerson] = useState<PersonData | null>(null);
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        window.location.replace("/");
+        axios.post('/user/logout', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json',
+                'x-auth-token': localStorage.getItem("token")
+            }
+        }).then(response => {
+            if(response.data.message === "User logged out successfully!") {
+                localStorage.removeItem('token');
+                window.location.replace("/");
+            }
+        })
     };
 
     useEffect(() => {
-        setIsLoggedIn(localStorage.getItem('token') !== null);
+        setIsLoggedIn(!isExpired(localStorage.getItem('token') as string));
         if (isLoggedIn) {
-            axios.get("/user/" + localStorage.getItem('token'), {
+            axios.get("/user", {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': ' application/json',
+                    'x-auth-token': localStorage.getItem('token')
                 }
             })
                 .then(response => {

@@ -33,8 +33,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
             "password": password
         })
             .then(response => {
-                console.log(response.data.message);
-                localStorage.setItem('token', response.data.id);
+                localStorage.setItem('token', response.data.token);
                 window.location.replace('/');
             }).catch(error => {
             if (error.response && error.response.status === 401) setLoginError(true);

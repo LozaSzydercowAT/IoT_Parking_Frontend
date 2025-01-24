@@ -1,4 +1,4 @@
-import {memo, useState} from 'react'
+import {ChangeEvent, memo, useEffect, useState} from 'react'
 import {
     LargeTitle,
     Input,
@@ -8,10 +8,29 @@ import {
     DialogTrigger,
     makeStyles,
     tokens,
-    DialogSurface, DialogTitle, DialogBody, DialogContent, MessageBar, MessageBarBody, Text, DialogActions
+    DialogSurface,
+    DialogTitle,
+    DialogBody,
+    DialogContent,
+    Text,
+    DialogActions,
+    Spinner, MessageBar
 } from "@fluentui/react-components";
-import {DeleteFilled, EditFilled, PasswordFilled} from "@fluentui/react-icons";
-import PersonData from "../../interfaces/PersonData.tsx";
+import {
+    DeleteFilled,
+    EditFilled,
+    LockClosedKeyFilled,
+    MailFilled,
+    PasswordFilled,
+    PersonRegular
+} from "@fluentui/react-icons";
+import axios from "../../../axiosConfig.ts";
+import {PersonAllData} from "../../interfaces/PersonAllData.tsx";
+
+interface PasswordUpdate {
+    newPassword: string;
+    newPasswordConfirm: string;
+}
 
 const useStyles = makeStyles({
     buttonRed: {
@@ -20,44 +39,113 @@ const useStyles = makeStyles({
 })
 
 const Account = memo(function() {
-    const [data, setData] = useState<PersonData | null>();
+    const [data, setData] = useState<PersonAllData | null>(null);
+    const [passwdUpdate, setPasswordUpdate] = useState<PasswordUpdate>( { newPassword: "", newPasswordConfirm: "" } )
     const classes = useStyles();
+    const [isAction, setAction] = useState(false);
+    const [passwordModal, setPasswordModal] = useState(false);
+    const [diffPassword, setDiffPassword] = useState(false);
+
+    const icon = isAction ? (<Spinner size={"tiny"} />) : null;
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setPasswordUpdate((prevPass) => ({
+            ...prevPass,
+            [name]: value
+        }));
+    };
+
+    useEffect(() => {
+        axios.get('/user/data', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json',
+                'x-auth-token': localStorage.getItem('token')
+            }
+        }).then(response => {
+            setData(response.data);
+            console.log(data);
+        })
+    }, []);
+
+    const goDelete = () => {
+        axios.delete('/user/deleteUser', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json',
+                'x-auth-token': localStorage.getItem('token')
+            }
+        }).then(response => {
+            if(response.status === 200) {
+                localStorage.removeItem('token');
+                window.location.replace('/');
+            }
+        })
+    }
+
+    const handlePasswordUpdate = () => {
+        setAction(true);
+        setDiffPassword(false);
+        if(passwdUpdate.newPassword !== passwdUpdate.newPasswordConfirm) {
+            setAction(false);
+            setDiffPassword(true);
+        } else {
+            axios.post('/user/updatePassword', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': ' application/json',
+                    'x-auth-token': localStorage.getItem('token')
+                },
+                data: {
+                    newPassword: passwdUpdate.newPasswordConfirm
+                }
+            }).then(response => {
+                if(response.status === 200) {
+                    setAction(false);
+                    setPasswordModal(false);
+                }
+            })
+        }
+
+    }
+
     return <>
         <div className={'tablePosition'}>
             <LargeTitle>Konto</LargeTitle>
         </div>
         <Field label="Nazwa użytkownika" className="labelStyle">
-            <Input readOnly type="text" name="username" defaultValue={"Test01"} />
+            <Input contentBefore={<PersonRegular />} readOnly type="text" name="username" value={data?.name || ""} />
         </Field>
         <Field label="Adres e-mail" className="labelStyle">
-            <Input readOnly type="email" name="email" defaultValue={"test01@test01.pl"} />
+            <Input contentBefore={<MailFilled />} readOnly type="email" name="email" value={data?.email || ""} />
         </Field>
         <Field label="Hasło" className="labelStyle">
-            <Input disabled type="password" name="password" defaultValue={"abcdefghijklmnopqrstuvwxyz"} />
+            <Input contentBefore={<LockClosedKeyFilled />} disabled type="password" name="password" value={"abcdefghijklmnopqrstuvwxyz"} />
         </Field>
         <div className={'buttonGroup'} style={{justifyContent: 'end'}}>
-            <Dialog modalType='alert'>
+            <Dialog modalType='alert' open={passwordModal}>
                 <DialogTrigger>
-                    <Button icon={<PasswordFilled />}>Zmień hasło</Button>
+                    <Button icon={<PasswordFilled />} onClick={() => setPasswordModal(true)}>Zmień hasło</Button>
                 </DialogTrigger>
                 <DialogSurface>
                     <DialogTitle>Zmiana hasła</DialogTitle>
                     <DialogContent>
-                        <Field required label="Aktualne hasło" className="labelStyle">
-                            <Input required type="password" name="oldPassword" />
-                        </Field>
+                        {diffPassword && <MessageBar intent={"error"}>
+                            Hasła są różne!
+                        </MessageBar>}
                         <Field required label="Nowe hasło" className="labelStyle">
-                            <Input required type="password" name="newPassword1" />
+                            <Input required type="password" name="newPassword" onChange={handleChange} disabled={isAction}/>
                         </Field>
                         <Field required label="Powtórz hasło" className="labelStyle">
-                            <Input required type="password" name="newPassword2" />
+                            <Input required type="password" name="newPasswordConfirm" onChange={handleChange} disabled={isAction}/>
                         </Field>
                     </DialogContent>
                     <DialogActions>
                         <DialogTrigger disableButtonEnhancement>
-                            <Button appearance="secondary">Anuluj</Button>
+                            <Button appearance="secondary" disabled={isAction}>Anuluj</Button>
                         </DialogTrigger>
-                        <Button appearance="primary">Zmień hasło</Button>
+                        <Button appearance="primary" onClick={handlePasswordUpdate} disabled={isAction} icon={icon}>{isAction ? "Zmiana hasła" : "Zmień hasło"}</Button>
                     </DialogActions>
                 </DialogSurface>
             </Dialog>
@@ -88,18 +176,13 @@ const Account = memo(function() {
                     <DialogTitle>Usuwanie konta</DialogTitle>
                     <DialogBody>
                         <DialogContent>
-                            <MessageBar intent={"error"} style={{marginBottom: '10px'}}>
-                                <MessageBarBody>
-                                    Przed usunięciem konta, należy wypłacić środki jeśli saldo jest większe niż 5 zł
-                                </MessageBarBody>
-                            </MessageBar>
-                            <Text>Czy napewno chcesz usunąć konto? Wszelkie dane odnośnie parkowania zostaną usunięte bezpowrotnie!</Text>
+                            <Text>Czy napewno chcesz usunąć konto? Wszelkie dane odnośnie parkowania oraz zgromadzone środki zostaną usunięte bezpowrotnie!</Text>
                         </DialogContent>
                         <DialogActions>
                             <DialogTrigger disableButtonEnhancement>
                                 <Button appearance="secondary">Anuluj</Button>
                             </DialogTrigger>
-                            <Button icon={<DeleteFilled />} className={classes.buttonRed} disabled={data?.balance < 5}>Usuń konto</Button>
+                            <Button icon={<DeleteFilled />} className={classes.buttonRed} onClick={goDelete}>Usuń konto</Button>
                         </DialogActions>
                     </DialogBody>
                 </DialogSurface>

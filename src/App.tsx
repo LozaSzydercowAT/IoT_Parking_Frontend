@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar.tsx";
 import {lazy, Suspense} from "react";
 import Loader from "./components/shared/Loader";
 import Footer from "./components/Footer";
+import {isExpired} from "react-jwt";
 
 const Homepage = lazy(() => import('./components/sites/Homepage'));
 const Register = lazy(() => import('./components/sites/Register'));
@@ -23,8 +24,8 @@ function App() {
                   <Routes>
                       <Route index element={<Homepage />} />
                       <Route path="login" element={<Login />} />
-                      <Route path="register" element={localStorage.getItem("token") ? <Navigate replace to={"/account"} /> : <Register />} />
-                      <Route path="account" element={!localStorage.getItem("token") ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
+                      <Route path="register" element={!isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/account"} /> : <Register />} />
+                      <Route path="account" element={isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/login?showInfo=true"}/> : <AccountPage />}>
                           <Route index element={<Account />} />
                           <Route path="payments" element={<Payments />} />
                           <Route path="history" element={<History />} />
