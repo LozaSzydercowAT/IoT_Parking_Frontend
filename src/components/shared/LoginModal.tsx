@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {LockClosedRegular, PasswordFilled, PersonAddRegular, PersonRegular} from "@fluentui/react-icons";
 import axios from "../../../axiosConfig.ts";
 import "../../assets/styles/login.css";
+import {isExpired} from "react-jwt";
 
 const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
     const [isAction, setActionStatus] = useState(false);
@@ -17,8 +18,12 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        setReqLoginInfo(urlParams.get('showInfo') === "true")
-        setRegisterSuccess(urlParams.get('registerSuccess') === "true")
+        setReqLoginInfo(urlParams.get('showInfo') === "true");
+        setRegisterSuccess(urlParams.get('registerSuccess') === "true");
+        if(isExpired(localStorage.getItem('token') || '')) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('expirationTime');
+        }
     }, [])
 
     const handleLogin = (event: FormEvent<HTMLFormElement>) => {
@@ -27,7 +32,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         setLoginError(false);
         setUnexError(false);
         setReqLoginInfo(false);
-    
+
         axios.post('/user/login', {
             mail: email,
             password: password
@@ -35,11 +40,11 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         .then(response => {
             console.log(response.data);
             const {token, expirationTime } = response.data;
-            
+
             // Zapisz token i czas wygaśnięcia
             localStorage.setItem('token', token);
             localStorage.setItem('expirationTime', expirationTime.toString());
-    
+
             // Automatyczne wylogowanie po upływie czasu
             const timeLeft = expirationTime - Date.now();
             console.log(timeLeft);
@@ -51,7 +56,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                     window.location.replace("/");
                 }, timeLeft);
             }
-    
+
             window.location.replace('/');
         })
         .catch(error => {
@@ -60,7 +65,7 @@ const LoginModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
             setActionStatus(false);
         });
     };
-    
+
 
     return (
         <Dialog modalType="alert" open={isOpen} onOpenChange={(_event, data) => data.open ? null : onClose()}>

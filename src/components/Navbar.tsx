@@ -13,16 +13,17 @@ function Navbar() {
 
     const handleLogout = () => {
         axios.post('/user/logout', {
+            token: localStorage.getItem("token")
+        }, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
                 'x-auth-token': localStorage.getItem("token")
             }
         }).then(response => {
-            if(response.data.message === "User logged out successfully!") {
-                localStorage.removeItem('token');
-                window.location.replace("/");
-            }
+            localStorage.removeItem('token');
+            localStorage.removeItem('expirationTime');
+            window.location.replace("/");
         })
     };
 
